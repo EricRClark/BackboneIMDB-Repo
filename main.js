@@ -1,17 +1,3 @@
-var templates = {};
-
-templates.movie = [
-
-    "<article data-id='<%= movie.id %>'>",
-    "<img src='<%= movie.posterImg %>'>",
-    "<div class='title'><h2><%= movie.title %></h2></div>",
-    "<p>Plot: <%= movie.plot %><p>",
-    "<p>Director: <%= movie.director %><p>",
-    "<p>Release Date: <%= movie.release %></p>",
-    "<h5>Rating: <%= movie.rating %></h5><button class='delete'>delete</button></div>",
-    "</article>"
-].join('');
-
 $(document).ready(function() {
 
     page.init();
@@ -23,25 +9,27 @@ var movieCollection = new MovieCollection(movies);
 var page = {
     movieTmpl: _.template(templates.movie),
     init: function() {
-        // page.initStyling();
+        page.initStyling();
         page.initEvents();
         page.addAll();
     },
 
 
-// initStyling: function () {
-//   //  page.addAll();
-//   //  page.addOne();
-// },
+    initStyling: function() {
+        page.addAll();
+        // page.addOne();- either use in addAll
+    },
 
 
-initEvents: function(events) {
+    initEvents: function(events) {
         $('.submitContainer').on('click', '.delete', page.deleteMovie);
-        $('.submitContainer').on('click', '.edit', page.displayEdit);
+        $('.submitContainer').on('click', '.edit', page.saveMovieEdit);
         $('.submitContainer').on('click', '#submit-edit', page.submitEdit);
         $('#submit').on('click', page.saveMovieEdit);
-        $('body').on('dblclick', "h3", page.contentEditable);
-        $('body').on('blur', "h3", page.submitContentEditable);
+        $('.container').on('click', '.toCreate', page.updateRev);
+        $('#newReview').on('click', '.save-edit', page.subNewReview);
+        $('#newReview').on('click', '.cancel', page.cancelRev);
+
 
     },
 
@@ -55,61 +43,76 @@ initEvents: function(events) {
 
     submitEdit: function(event) {
         event.preventDefault();
-        var newMovie = {
+        var editSave = {
             title: $('.submitContainer input[name="title"]').val(),
             director: $('.submitContainer input[name="director"]').val(),
             release: $('.submitContainer input[name="release"]').val(),
             posterImg: $('.submitContainer input[name="posterImg"]').val(),
             plot: $('.submitContainer input[name="plot"]').val(),
         };
-        var myMovie = new MovieModel(newMovie);
+        var saveEditMovie = new MovieModel(editSave);
         var movieId = $(this).closest('article').data('id');
-        movieCollection.add(myMovie);
-        console.log(movieCollection);
+        movieCollection.get(movieId).set(editSave);
         page.addAll();
+
+
     },
 
     saveMovieEdit: function(event) {
         event.preventDefault();
-
-        var title = $('input[name="title"]').val();
-        var director = $('input[name="director"]').val();
-        var release = $('input[name="release"]').val();
-        var posterImg = $('input[name="posterImg"]').val();
-        var plot = $('input[name="plot"]').val();
+        var editTmpl = _.template(templates.edit);
+        var title = $(this).closest('article').find('h2').text();
+        var director = $(this).closest('article').find('.review-director').text();
+        var rating = $(this).closest('article').find('.review-rating').text();
+        var posterImg = $(this).closest('article').find('img').prop('src');
+        var plot = $(this).closest('article').find('.review-plot').text();
         var myMovieEdits = {
             title: title,
             director: director,
             release: release,
             posterImg: img,
             plot: plot
-        };
+        }
+        $(this).closest('article').html(editTmpl({
+            movies: myMovieEdits
+        }))
+    },
+    displayEdit: function(event) {
+        event.preventDefault();
+        var cid = $(this).parent().data('id');
+        var myModel = MovieCollection.get(cid);
+    },
 
+    updateRev: function(event) {
+        event.preventDefault();
+        $('#updateRev').removeClass('active');
+        $('#newReview').addClass('active');
+    },
+    cancelRev: function(event) {
+        event.preventDefault();
+        $('#newReview').removeClass('active');
+        $('#updateRev').addClass('active');
+    },
+
+    subNewReview: function(event) {
+        event.preventDefault();
+
+        var newMovieObj = {
+            title: $('input[name="newTitle"]').val(),
+            desc: $('input[name="newDesc"]').val(),
+            director: $('input[name="newDirector"]').val(),
+            posterImg: $('input[name="newPoster"]').val()
+        };
+        var saveNewMovie = new MovieModel(newMovieObj);
         var movieId = $(this).closest('article').data('id');
-        movieCollection.get(movieId).set(myMovieEdits);
+        movieCollection.add(newMovieObj);
         page.addAll();
 
+        $('#newReview').removeClass('active');
+        $('#updateRev').addClass('active');
+
     },
 
-    displayEdit: function(event) {
-      event.preventDefault();
-      var cid = $(this).parent().data('id');
-      var myModel = MovieCollection.get(cid);
-    },
-
-//     contentEditable: function (event) {
-//       event.preventDefault ();
-//       $(this).attr("contentEditable", true);
-//
-//     }
-// submitContentEditable: function (event) {
-//   event.preventDefault();
-//   var cid = $(this).parent().data('id');
-//   var myObj = {
-//     title: $(this).text
-//   }
-// var myModel =
-// }
     addOne: function(element) {
         element.attributes.id = element.cid;
         var markup = page.movieTmpl({
@@ -122,4 +125,4 @@ initEvents: function(events) {
         $('.container').html('');
         _.each(movieCollection.models, page.addOne);
     },
-  };
+};
