@@ -1,0 +1,32 @@
+h1 {
+    text-align: center;
+    margin-top: 0px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    font-family: monospace;
+    font-size: 60px;
+    color: snow;
+    background-color: mediumseagreen;
+}
+
+body > img {
+width: 100%;
+height: 170px;
+margin-top: -40px;
+}
+
+.container img {
+width: 50%;
+height: auto;
+margin-left: 3%;
+}
+
+.container {
+height: auto;
+margin-left: 27%;
+padding-top: 2%;
+}
+
+.delete {
+  margin-bottom: 3%
+}
