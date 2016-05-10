@@ -1,25 +1,57 @@
 var templates = {};
 
 templates.movie = [
-
-    "<article data-id='<%= movie.id %>'>",
-    "<div class='review-img'><img src='<%= movie.posterImg %>'></div>",
-    "<div class= 'review-film'>",
-    "<h2><%= movie.title %></h2>",
-    "<p class = 'review-plot'><%= movie.plot %><p>",
-    "<p class = 'review-director'><%= movie.director %><p>",
-    "<p class = 'review-rating'<%= movie.rating %></p>",
+  "<img style='' src='<%= posterImg %>'>",
+    "<h3><%= title %></h3>",
+    "<p><%= desc %></p>",
+    "<button class='btn btn-danger delete'>delete</button>",
+    "<button class='btn btn-warning showEdit'>Edit</button>",
+    "<div class='editSection'>",
+      '<div class="form-group">',
+    "<input class='form-control editTitle' type='text' value='<%= title %>'>",
     "</div>",
-    "<h5>Rating: <%= movie.rating %></h5><button class='delete'>delete</button></div>",
-    "</article>"
+      '<div class="form-group">',
+    "<input class='form-control editPosterImg' type='text' value='<%= posterImg %>'>",
+    "</div>",
+      '<div class="form-group">',
+    "<input class='form-control editPlot' type='text' value='<%= desc %>'>",
+    "</div>",
+    "<button class='editMovie'>Edit Movie</button>",
+    "</div>"
 ].join('');
 
-templates.edit = [
-  '<form id="edit-review">',
-    '<input type="text" name="poster" placeholder="poster" value="<%= movies.posterImg %>">',
-    '<input type="text" name="title" placeholder="movie title" value="<%= movies.title %>">',
-    '<input type="text" name="director" placeholder="director" value="<%= movies.director %>">',
-    '<input placeholder="plot review" name="plot" value="<%= movies.plot %>">',
-    '<button class="save-edit">save</button>',
-  '</form>',
-].join("");
+
+templates.addMovie = [
+  '<form class="">',
+    '<div class="form-group">',
+      '<label for="title">Title</label>',
+    '<input class="form-control" type="text" name="title" placeholder="Title" value="">',
+  '</div>',
+    '<div class="form-group">',
+      '<label for="director">Director</label>',
+    '<input class="form-control" type="text" name="director" placeholder="Director" value="">',
+  '</div>',
+  '<div class="form-group">',
+    '<label for="posterImg">Poster Cover</label>',
+    '<input class="form-control" type="text" name="coverImg" placeholder="Poster Image URL" value="">',
+  '</div>',
+  '<div class="form-group">',
+'<label for="plot">Plot</label>',
+    '<textarea class="form-control" name="desc" rows="8" cols="40" placeholder="Plot"></textarea>',
+  '</div>',
+    '<button class="btn btn-success" type="submit" name="Submit">Add Movie</button>',
+  '</form>'
+].join('');
+
+
+templates.form =
+'<button class ="cancel">',
+  '<div class="form-group">',
+'<form id="newReview">',
+          '<input type="text" name="title" value="" placeholder="Movie Title">'
+          '<input type="text" name="director" value=""placeholder="Director">'
+          '<input type="text" name="posterImg" value="" placeholder="Link to Poster Image">'
+          '<input type="text" name="plot" value="" placeholder="Enter Description">'
+          '<button class="save-edit">submit</button>'
+        '</form>'
+      '</div>'
